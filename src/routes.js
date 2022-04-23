@@ -23,6 +23,16 @@ const routes = [{
         path: '/books/{id}',
         handler: Book.get_book
     },
+    {
+        method: 'PUT',
+        path: '/books/{id}',
+        handler: Book.put_book
+    },
+    {
+        method: 'DELETE',
+        path: '/books/{id}',
+        handler: Book.delete_book
+    }
 ];
 
 module.exports = routes;
