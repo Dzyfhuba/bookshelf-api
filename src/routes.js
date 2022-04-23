@@ -16,21 +16,13 @@ const routes = [{
     {
         method: 'GET',
         path: '/books',
-        handler: (request, h) => {
-            // check if params has name
-            if (request.query) {
-                return Book.get_book(request.query);
-            }
-            return Book.get_books();
-        }
+        handler: Book.get_books
     },
-    // {
-    //     method: 'GET',
-    //     path: '/books{quary?}',
-    //     handler: (request, h) => {
-    //         return Book.get_book(request.params.quary);
-    //     }
-    // }
+    {
+        method: 'GET',
+        path: '/books/{id}',
+        handler: Book.get_book
+    },
 ];
 
 module.exports = routes;
