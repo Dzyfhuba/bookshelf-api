@@ -1,0 +1,35 @@
+{
+    "name": "bookshelf-api",
+    "version": "1.0.0",
+    "description": "Provide bookshelf API service for learning purposes.",
+    "main": "server.js",
+    "scripts": {
+        "start": "nodemon ./server.js",
+        "lint": "eslint ./"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Dzyfhuba/bookshelf-api.git"
+    },
+    "keywords": [
+        "api;",
+        "bookshelf;",
+        "nodejs;",
+        "npm;",
+        "javascript;"
+    ],
+    "author": "Hafidz Ubaidillah",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/Dzyfhuba/bookshelf-api/issues"
+    },
+    "homepage": "https://github.com/Dzyfhuba/bookshelf-api#readme",
+    "devDependencies": {
+        "eslint": "^8.13.0",
+        "nodemon": "^2.0.15"
+    },
+    "dependencies": {
+        "@hapi/hapi": "^20.2.2",
+        "nanoid": "^3.3.3"
+    }
+}

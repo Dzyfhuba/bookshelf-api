@@ -1,0 +1,28 @@
+{
+    "env": {
+        "browser": true,
+        "commonjs": true,
+        "es2021": true
+    },
+    "extends": "eslint:recommended",
+    "parserOptions": {
+        "ecmaVersion": "latest"
+    },
+    "rules": {
+        // just warn for unused variables
+        "no-unused-vars": "off",
+        // allow console.log
+        "no-console": "off",
+        // allow debugger
+        "no-debugger": "off",
+        // recommend rules
+        "semi": [
+            "error",
+            "always"
+        ],
+        "quotes": [
+            "error",
+            "single"
+        ]
+    }
+}
