@@ -1,11 +1,7 @@
-// const books = require('../model/Books');
 const { nanoid } = require('nanoid');
 let books = [];
-// const fs = require('fs');
-
 class BookController {
     static post_book(request, h) {
-        // get data from request
         const {
             name,
             year,
@@ -17,7 +13,6 @@ class BookController {
             reading,
         } = request.payload;
 
-        // validate data
         if (!name) {
             return h.response({
                 status: 'fail',
@@ -30,7 +25,7 @@ class BookController {
                 message: 'Gagal menambahkan buku. readPage tidak boleh lebih besar dari pageCount'
             }).code(400);
         }
-        // add generic validation
+
         if (!year && !author && !summary && !publisher && !pageCount && !readPage && !reading) {
             return h.response({
                 status: 'fail',
@@ -40,7 +35,6 @@ class BookController {
 
         const finished = pageCount === readPage;
 
-        // create new book
         const newBook = {
             id: nanoid(16),
             name,
@@ -56,18 +50,8 @@ class BookController {
             updatedAt: new Date(),
         };
 
-        // new object to books
         books.push(newBook);
-        // try {
-        //     fs.writeFileSync('src/model/Books.json', JSON.stringify(books));
-        // } catch (error) {
-        //     console.log(error);
-        // }
 
-        // store ../model/Books.json
-        // fs.writeFileSync('./model/Books.json', JSON.stringify(books));
-
-        // response with handler
         return h.response({
             status: 'success',
             message: 'Buku berhasil ditambahkan',
@@ -81,7 +65,6 @@ class BookController {
 
         let filteredBooks = books;
 
-        // filter by reading is true or false
         if (reading != undefined) {
             if (reading) {
                 filteredBooks = filteredBooks.filter(book => book.reading == true);
@@ -96,12 +79,10 @@ class BookController {
             console.log(filteredBooks);
         }
 
-        // if name is not empty
         if (name) {
             filteredBooks = filteredBooks.filter(book => book.name.toLowerCase().includes(name.toLowerCase()));
         }
 
-        // get id, name and publisher from filteredBooks
         const mappedBook = filteredBooks.map(book => ({
             id: book.id,
             name: book.name,
@@ -117,13 +98,11 @@ class BookController {
     }
     static get_book(request, h) {
         console.log(request.params);
-        // get id from request
+
         const { id } = request.params;
 
-        // find book by id
         const book = books.find(book => book.id === id);
 
-        // if book is not found or array is empty
         if (!book || books.length === 0) {
             const res = h.response({
                 status: 'fail',
@@ -132,7 +111,6 @@ class BookController {
             return res;
         }
 
-        // response with handler
         return h.response({
             status: 'success',
             data: {
@@ -141,19 +119,17 @@ class BookController {
         }).code(200);
     }
     static put_book(request, h) {
-        // get id from request
+
         const { id } = request.params;
-        // find book by id
+
         const book = books.find(book => book.id === id);
-        // if book not found
+
         if (!book) {
             return h.response({
                 status: 'fail',
                 message: 'Gagal memperbarui buku. Id tidak ditemukan'
             }).code(404);
         }
-
-        // get data from request
         const {
             name,
             year,
@@ -165,7 +141,7 @@ class BookController {
             reading,
         } = request.payload;
 
-        // validate data
+
         if (!name) {
             return h.response({
                 status: 'fail',
@@ -179,7 +155,6 @@ class BookController {
             }).code(400);
         }
 
-        // update book
         book.name = name;
         book.year = year;
         book.author = author;
@@ -189,8 +164,7 @@ class BookController {
         book.readPage = readPage;
         book.reading = reading;
         book.updatedAt = new Date();
-        // store ../model/Books.json
-        // fs.writeFileSync('src/model/Books.json', JSON.stringify(books));
+
         const res = h.response({
             status: 'success',
             message: 'Buku berhasil diperbarui'
@@ -199,13 +173,11 @@ class BookController {
         return res;
     }
     static delete_book(request, h) {
-        // get id from request
         const { id } = request.params;
 
-        // find book by id
         const book = books.find(book => book.id === id);
 
-        // if book not found
+
         if (!book) {
             return h.response({
                 status: 'fail',
@@ -213,13 +185,8 @@ class BookController {
             }).code(404);
         }
 
-        // remove book
         books.splice(books.indexOf(book), 1);
 
-        // store ../model/Books.json
-        // fs.writeFileSync('src/model/Books.json', JSON.stringify(books));
-
-        // response with handler
         return h.response({
             status: 'success',
             message: 'Buku berhasil dihapus',
