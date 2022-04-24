@@ -1,7 +1,7 @@
 // const books = require('../model/Books');
 const { nanoid } = require('nanoid');
-const books = require('../model/Books');
-const fs = require('fs');
+let books = [];
+// const fs = require('fs');
 
 class BookController {
     static post_book(request, h) {
@@ -38,6 +38,8 @@ class BookController {
             }).code(500);
         }
 
+        const finished = pageCount === readPage;
+
         // create new book
         const newBook = {
             id: nanoid(16),
@@ -48,7 +50,7 @@ class BookController {
             publisher,
             pageCount,
             readPage,
-            finished: false,
+            finished,
             reading,
             insertedAt: new Date(),
             updatedAt: new Date(),
@@ -56,43 +58,66 @@ class BookController {
 
         // new object to books
         books.push(newBook);
-        try {
-            fs.writeFileSync('src/model/Books.json', JSON.stringify(books));
-        } catch (error) {
-            console.log(error);
-        }
+        // try {
+        //     fs.writeFileSync('src/model/Books.json', JSON.stringify(books));
+        // } catch (error) {
+        //     console.log(error);
+        // }
 
         // store ../model/Books.json
         // fs.writeFileSync('./model/Books.json', JSON.stringify(books));
-
 
         // response with handler
         return h.response({
             status: 'success',
             message: 'Buku berhasil ditambahkan',
             data: {
-                // bookId: newBook.id,
                 bookId: newBook.id
             }
         }).code(201);
     }
     static get_books(request, h) {
-        // map get id, name and publisher from books
-        const booksData = books.map(book => {
-            return {
-                id: book.id,
-                name: book.name,
-                publisher: book.publisher,
-            };
-        });
+        const { name, reading, finished } = request.query;
+
+        let filteredBooks = books;
+
+        // filter by reading is true or false
+        if (reading !== undefined) {
+            if (reading) {
+                filteredBooks = books.filter(book => book.reading == true);
+            } else {
+                filteredBooks = books.filter(book => book.reading == false);
+            }
+        }
+
+        if (finished !== undefined) {
+            if (finished) {
+                filteredBooks = books.filter(book => book.finished == true);
+            } else {
+                filteredBooks = books.filter(book => book.finished == false);
+            }
+        }
+
+        // get id, name and publisher from filteredBooks
+        console.log(filteredBooks.map(book => ({
+            finished: book.finished,
+            reading: book.reading
+        })));
+        const mappedBook = filteredBooks.map(book => ({
+            id: book.id,
+            name: book.name,
+            publisher: book.publisher,
+        }));
         return h.response({
             status: 'success',
+            message: 'Buku berhasil ditampilkan',
             data: {
-                books: booksData
+                books: mappedBook
             }
         }).code(200);
     }
     static get_book(request, h) {
+        console.log(request.params);
         // get id from request
         const { id } = request.params;
 
@@ -101,10 +126,11 @@ class BookController {
 
         // if book is not found or array is empty
         if (!book || books.length === 0) {
-            return h.response({
+            const res = h.response({
                 status: 'fail',
                 message: 'Buku tidak ditemukan'
             }).code(404);
+            return res;
         }
 
         // response with handler
@@ -118,10 +144,8 @@ class BookController {
     static put_book(request, h) {
         // get id from request
         const { id } = request.params;
-        console.log(id);
         // find book by id
         const book = books.find(book => book.id === id);
-        console.log(book);
         // if book not found
         if (!book) {
             return h.response({
@@ -166,15 +190,14 @@ class BookController {
         book.readPage = readPage;
         book.reading = reading;
         book.updatedAt = new Date();
-        console.log(book);
         // store ../model/Books.json
-        fs.writeFileSync('src/model/Books.json', JSON.stringify(books));
-
-        // response with handler
-        return h.response({
+        // fs.writeFileSync('src/model/Books.json', JSON.stringify(books));
+        const res = h.response({
             status: 'success',
-            message: 'Buku berhasil diperbarui',
+            message: 'Buku berhasil diperbarui'
         }).code(200);
+
+        return res;
     }
     static delete_book(request, h) {
         // get id from request
@@ -195,7 +218,7 @@ class BookController {
         books.splice(books.indexOf(book), 1);
 
         // store ../model/Books.json
-        fs.writeFileSync('src/model/Books.json', JSON.stringify(books));
+        // fs.writeFileSync('src/model/Books.json', JSON.stringify(books));
 
         // response with handler
         return h.response({
