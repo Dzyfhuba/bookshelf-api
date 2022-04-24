@@ -82,27 +82,26 @@ class BookController {
         let filteredBooks = books;
 
         // filter by reading is true or false
-        if (reading !== undefined) {
+        if (reading != undefined) {
             if (reading) {
-                filteredBooks = books.filter(book => book.reading == true);
+                filteredBooks = filteredBooks.filter(book => book.reading == true);
             } else {
-                filteredBooks = books.filter(book => book.reading == false);
+                filteredBooks = filteredBooks.filter(book => book.reading == false);
             }
         }
 
-        if (finished !== undefined) {
-            if (finished) {
-                filteredBooks = books.filter(book => book.finished == true);
-            } else {
-                filteredBooks = books.filter(book => book.finished == false);
-            }
+        if (finished != undefined) {
+            if (finished == 1) filteredBooks = filteredBooks.filter((book) => book.finished == true);
+            if (finished == 0) filteredBooks = filteredBooks.filter((book) => book.finished == false);
+            console.log(filteredBooks);
+        }
+
+        // if name is not empty
+        if (name) {
+            filteredBooks = filteredBooks.filter(book => book.name.toLowerCase().includes(name.toLowerCase()));
         }
 
         // get id, name and publisher from filteredBooks
-        console.log(filteredBooks.map(book => ({
-            finished: book.finished,
-            reading: book.reading
-        })));
         const mappedBook = filteredBooks.map(book => ({
             id: book.id,
             name: book.name,
